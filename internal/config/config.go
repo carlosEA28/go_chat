@@ -17,9 +17,8 @@ type ServerConfig struct {
 }
 
 type MongoConfig struct {
-	URI        string
-	Database   string
-	Collection string
+	URI      string
+	Database string
 }
 
 func Load() (*Config, error) {
@@ -31,9 +30,8 @@ func Load() (*Config, error) {
 			GinMode: getEnv("GIN_MODE", "debug"),
 		},
 		Mongo: MongoConfig{
-			URI:        getEnv("MONGO_DB_URL", getEnv("MONGO_URI", "mongodb://localhost:27017")),
-			Database:   getEnv("MONGO_DATABASE", "go_chat"),
-			Collection: getEnv("MONGO_COLLECTION", "messages"),
+			URI:      getEnv("MONGO_DB_URL", getEnv("MONGO_URI", "mongodb://localhost:27017")),
+			Database: getEnv("MONGO_DATABASE", "go_chat"),
 		},
 	}, nil
 }
