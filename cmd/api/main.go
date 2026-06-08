@@ -12,6 +12,7 @@ import (
 
 	"github.com/carlosEA28/go_chat/internal/config"
 	"github.com/carlosEA28/go_chat/internal/logger"
+	"github.com/carlosEA28/go_chat/internal/repositories"
 	"github.com/carlosEA28/go_chat/internal/server"
 )
 
@@ -21,6 +22,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	mongoCtx, err := repositories.NewMongoRepositoryContext(cfg.Mongo.URI, cfg.Mongo.Database, cfg.Mongo.Collection)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to connect to mongo")
+	}
+	log.Info().Str("database", cfg.Mongo.Database).Msg("connected to mongo")
 
 	srv := server.New(cfg, &log)
 
@@ -54,5 +61,9 @@ func main() {
 	}
 
 	log.Info().Msg("shutting down database")
+	if err := mongoCtx.Close(ctx); err != nil {
+		log.Error().Err(err).Msg("failed to disconnect mongo")
+		return
+	}
 
 }

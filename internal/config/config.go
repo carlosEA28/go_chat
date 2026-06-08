@@ -8,7 +8,7 @@ import (
 
 type Config struct {
 	Server ServerConfig
-	// Database DatabaseConfig
+	Mongo  MongoConfig
 }
 
 type ServerConfig struct {
@@ -16,14 +16,11 @@ type ServerConfig struct {
 	GinMode string
 }
 
-// type DatabaseConfig struct {
-// 	Host     string
-// 	Port     string
-// 	User     string
-// 	Password string
-// 	Name     string
-// 	SSLMode  string
-// }
+type MongoConfig struct {
+	URI        string
+	Database   string
+	Collection string
+}
 
 func Load() (*Config, error) {
 	_ = godotenv.Load()
@@ -33,14 +30,11 @@ func Load() (*Config, error) {
 			Port:    getEnv("PORT", "8080"),
 			GinMode: getEnv("GIN_MODE", "debug"),
 		},
-		// Database: DatabaseConfig{
-		// 	Host:     ,
-		// 	Port:     ,
-		// 	User:     ,
-		// 	Password: ,
-		// 	Name:     ,
-		// 	SSLMode:  ,
-		// },
+		Mongo: MongoConfig{
+			URI:        getEnv("MONGO_DB_URL", getEnv("MONGO_URI", "mongodb://localhost:27017")),
+			Database:   getEnv("MONGO_DATABASE", "go_chat"),
+			Collection: getEnv("MONGO_COLLECTION", "messages"),
+		},
 	}, nil
 }
 
